@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Registrazione Vocale Arcana</title>
+<style>
+  body {
+    background-color: #fff8dc;
+    font-family: 'Cinzel', serif;
+    color: #3e2c1c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    min-height: 100vh;
+    margin: 0;
+  }
+  #container {
+    border: 3px solid #8b5e3c;
+    border-radius: 20px;
+    padding: 20px 30px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    text-align: center;
+  }
+  button {
+    padding: 10px 20px;
+    margin: 8px;
+    border-radius: 30px;
+    border: 2px solid #5a3e2b;
+    background-color: #d2b48c;
+    color: #3e2c1c;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  #result {
+    margin-top: 12px;
+    font-weight: bold;
+    min-height: 24px;
+    color: darkred;
+    min-height: 30px;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h3>🎙️ Prova del Vocale Arcano</h3>
+    <p>
+      Dimostra di non aver perso le tue capacità oratorie.<br>
+      Usando tutta la tua <strong>loquacità</strong>, racconta la tua epica battaglia settimanale contro i mostri della vita quotidiana: piatti sporchi, lavatrici dimenticate, calzini spaiati e il terribile pellegrinaggio per buttare la spazzatura.
+    </p>
+
+    <button id="startBtn">🎤 Inizia Registrazione</button>
+    <button id="stopBtn" disabled>⏹️ Ferma Registrazione</button>
+
+    <div id="result"></div>
+  </div>
+
+<script>
+  let mediaRecorder;
+  let audioChunks = [];
+  let startTime;
+
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const result = document.getElementById('result');
+
+  startBtn.onclick = () => {
+    result.textContent = '';
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      result.textContent = "❌ Il tuo dispositivo non supporta la magia del microfono.";
+      return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        startTime = Date.now();
+
+        mediaRecorder.ondataavailable = event => {
+          if(event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const duration = (Date.now() - startTime) / 1000;
+          if (duration > 120) {
+            result.style.color = "green";
+            result.textContent = "✅ Sfida superata! Reindirizzamento...";
+            // Cambia il link con quello giusto al tuo sito
+            setTimeout(() => {
+              window.location.href = "https://matrimoniofrancesc0.wixsite.com/fra-ile-20250706/segreto-2";
+            }, 2000);
+          } else {
+            result.style.color = "darkred";
+            result.textContent = "❌ La tua oratoria è troppo debole. Il vero Eroe avrebbe superato i 2 minuti.";
+          }
+          // Stop all tracks to release mic
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorder.start();
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        result.style.color = "black";
+        result.textContent = "🔴 Registrazione in corso...";
+      })
+      .catch(err => {
+        console.error('Errore:', err);
+        result.textContent = "❌ Impossibile accedere al microfono.";
+      });
+  };
+
+  stopBtn.onclick = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+  };
+</script>
+
+</body>
+</html>
