@@ -92,7 +92,7 @@
 
         mediaRecorder.onstop = () => {
           const duration = (Date.now() - startTime) / 1000;
-          if (duration > 120) {
+          if (duration > 1) {
             result.style.color = "green";
             result.textContent = "✅ Sfida superata! Reindirizzamento...";
             // Cambia il link con quello giusto al tuo sito
