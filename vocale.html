@@ -92,7 +92,7 @@
 
         mediaRecorder.onstop = () => {
           const duration = (Date.now() - startTime) / 1000;
-          if (duration > 1) {
+          if (duration > 60) {
             result.style.color = "green";
             result.textContent = "✅ Sfida superata! Reindirizzamento...";
             // Cambia il link con quello giusto al tuo sito
@@ -101,7 +101,7 @@
             }, 2000);
           } else {
             result.style.color = "darkred";
-            result.textContent = "❌ La tua oratoria è troppo debole. Il vero Eroe avrebbe superato i 2 minuti.";
+            result.textContent = "❌ La tua oratoria è troppo debole. Il vero Eroe avrebbe parlato per almeno un minuto.";
           }
           // Stop all tracks to release mic
           stream.getTracks().forEach(track => track.stop());
